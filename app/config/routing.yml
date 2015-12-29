@@ -1,0 +1,4 @@
+golden_hands_portfolio:
+    resource: "@GoldenHandsPortfolioBundle/Controller/"
+    type:     annotation
+    prefix:   /
