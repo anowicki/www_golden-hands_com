@@ -6,7 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
-
+        
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+        
 class DefaultController extends Controller
 {
     /**
@@ -43,18 +46,23 @@ class DefaultController extends Controller
         $message = $_POST['message'];
 
         // Create the email and send the message
-        $email_subject = "Website Contact Form:  $name";
-        $email_body = "You have received a new message from your website contact form.\n\n"."Here are the details:\n\nName: $name\n\nEmail: $email_address\n\nPhone: $phone\n\nMessage:\n$message";
-        $emails[] = 'andrzejnowicki.ns@gmail.com';
+        $email_subject = "Website Contact Form:  $name \n\n\n";
+        $email_body = $email_subject . "You have received a new message from your website contact form.\n\n"."Here are the details:\n\nName: $name\n\nEmail: $email_address\n\nPhone: $phone\n\nMessage:\n$message";
         
+
+
+        $fs = new Filesystem();
+
+        $file = '/mail/'.mt_rand().'.txt';
+        try {
+            $fs->touch($file);
+            $fs->dumpFile($file, $email_body);
+        } catch (IOExceptionInterface $e) {
+            echo "An error occurred while creating your directory at ".$e->getPath();
+        }
             
-        $swift_message = \Swift_Message::newInstance();
-        $swift_message->setSubject($email_subject);
-        $swift_message->setBody($email_body);
-        $swift_message->setFrom($email_address);
-        $swift_message->setTo($emails);
-        
-        $this->get('mailer')->send($swift_message);
+
+  
         echo 'true';
         exit();
         
