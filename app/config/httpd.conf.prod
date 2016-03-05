@@ -1,0 +1,28 @@
+<VirtualHost *:80>
+    SetEnv          ee_env    "prod"
+    SetEnv          ee_debug  "false"
+
+    ServerName     www.golden-hands.pl
+    ServerAlias    złote-ręce.pl www.złote-ręce.pl golden-hands.pl
+    DocumentRoot   /var/www/sites/www_golden-hands_pl/web
+    DirectoryIndex app.php
+
+    ErrorLog  /var/log/httpd/www_golden-hands_pl.error
+    CustomLog /var/log/httpd/www_golden-hands_pl.access common
+
+    <Directory /var/www/sites/www_golden-hands_pl/web/>
+        AllowOverride All
+        Allow from All
+        Require all granted
+
+        RewriteEngine On
+        # Always redirect to WWW
+        RewriteCond %{HTTP_HOST} ^golden-hands\.pl$ [NC]
+        RewriteRule ^(.*)$ http://www.golden-hands.pl/$1 [R=301,L]
+
+        # Symfony stuff
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.*)$ app.php [QSA,L]
+    </Directory>
+
+</VirtualHost>
