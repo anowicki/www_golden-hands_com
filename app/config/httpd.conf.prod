@@ -3,12 +3,14 @@
     SetEnv          ee_debug  "false"
 
     ServerName     www.golden-hands.pl
-    ServerAlias    złote-ręce.pl www.złote-ręce.pl golden-hands.pl
+    ServerAlias    xn--zote-rce-seb81b.pl www.xn--zote-rce-seb81b.pl golden-hands.pl
     DocumentRoot   /var/www/sites/www_golden-hands_pl/web
     DirectoryIndex app.php
 
     ErrorLog  /var/log/httpd/www_golden-hands_pl.error
     CustomLog /var/log/httpd/www_golden-hands_pl.access common
+
+    AddDefaultCharset UTF-8
 
     <Directory /var/www/sites/www_golden-hands_pl/web/>
         AllowOverride All
