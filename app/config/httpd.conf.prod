@@ -17,10 +17,11 @@
 
         RewriteEngine On
         # Always redirect to WWW
-        RewriteBase /
+        RewriteCond %{HTTP_HOST} ^www\.golden\-hands\.pl$ [NC]
+        RewriteRule ^(.*)$ http://golden-hands.pl/$1 [R=301,L]
 
-        RewriteCond %{HTTP_HOST} ^([^.]+)\.xn--zote\-rce-seb81b\.com$ [NC] 
-        RewriteRule ^(.*)$ http://xn--zote-rce-seb81b.pl/$1 [R=301,L] 
+        #RewriteCond %{HTTP_HOST} ^([^.]+)\.xn--zote\-rce-seb81b\.com$ [NC] 
+        #RewriteRule ^(.*)$ http://xn--zote-rce-seb81b.pl/$1 [R=301,L] 
 
         # Symfony stuff
         RewriteCond %{REQUEST_FILENAME} !-f
