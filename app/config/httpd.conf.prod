@@ -16,16 +16,26 @@
         Require all granted
 
         RewriteEngine On
+        RewriteBase /
+        RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+        RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.*)$ app.php [QSA,L]
+
+        #RewriteEngine On
         # Always redirect to WWW
-        RewriteCond %{HTTP_HOST} ^www\.golden\-hands\.pl$ [NC]
-        RewriteRule ^(.*)$ http://golden-hands.pl/$1 [R=301,L]
+        #RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+	#RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+	#RewriteCond %{HTTP_HOST} ^www\.golden\-hands\.pl$ [NC]
+        #RewriteRule ^(.*)$ http://golden-hands.pl/$1 [R=301,L]
 
         #RewriteCond %{HTTP_HOST} ^([^.]+)\.xn--zote\-rce-seb81b\.com$ [NC] 
         #RewriteRule ^(.*)$ http://xn--zote-rce-seb81b.pl/$1 [R=301,L] 
 
         # Symfony stuff
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteRule ^(.*)$ app.php [QSA,L]
+        #RewriteCond %{REQUEST_FILENAME} !-f
+        #RewriteRule ^(.*)$ app.php [QSA,L]
     </Directory>
 
 </VirtualHost>
