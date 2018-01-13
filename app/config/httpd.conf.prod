@@ -2,8 +2,9 @@
     SetEnv          ee_env    "prod"
     SetEnv          ee_debug  "false"
 
-    ServerName     www.golden-hands.pl
-    ServerAlias    xn--zote-rce-seb81b.pl www.xn--zote-rce-seb81b.pl golden-hands.pl
+
+    ServerName     www.mrhandyman.pl
+    ServerAlias    mrhandyman.pl
     DocumentRoot   /var/www/sites/www_golden-hands_pl/web
     DirectoryIndex app.php
 
@@ -16,26 +17,55 @@
         Require all granted
 
         RewriteEngine On
-        RewriteBase /
-        RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-        RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+	RewriteEngine On
+	RewriteRule ^(.*)$ https://%{HTTP_HOST}$1 [R=301,L]    
+	
+	RewriteCond %{HTTP_HOST} ^mrhandyman\.pl$ [NC]
+    	RewriteRule ^(.*)$ http://www.mrhandyman.pl/$1 [R=301,L]
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.*)$ app.php [QSA,L]
+    </Directory>
+</VirtualHost>
+<VirtualHost *:443>
+        SetEnv          ee_env    "prod"
+        SetEnv          ee_debug  "false"
+        ServerName www.mrhandyman.pl
+        ServerAlias mrhandyman.pl
+        DocumentRoot /var/www/sites/www_golden-hands_pl/web
+
+        CustomLog /var/log/httpd/www_golden-hands_pl_ssl_access.log combined
+        ErrorLog  /var/log/httpd/www_golden-hands_pl_ssl.error
+        ErrorLog /var/log/httpd/www_golden-hands_pl_ssl.log
+        LogLevel warn
+
+        SSLEngine on
+        SSLCertificateFile    /etc/letsencrypt/live/mrhandyman.pl/cert.pem
+        SSLCertificateKeyFile /etc/letsencrypt/live/mrhandyman.pl/privkey.pem
+        SSLCertificateChainFile /etc/letsencrypt/live/mrhandyman.pl/fullchain.pem
+
+        <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                SSLOptions +StdEnvVars
+        </FilesMatch>
+
+        BrowserMatch "MSIE [2-6]" \
+        nokeepalive ssl-unclean-shutdown \
+        downgrade-1.0 force-response-1.0
+        BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
+
+    <Directory /var/www/sites/www_golden-hands_pl/web/>
+        AllowOverride All
+        Allow from All
+        Require all granted
+
+        RewriteEngine On
+
+        RewriteCond %{HTTP_HOST} ^mrhandyman\.pl$ [NC]
+        RewriteRule ^(.*)$ https://www.mrhandyman.pl/$1 [R=301,L]
+
         RewriteCond %{REQUEST_FILENAME} !-f
         RewriteRule ^(.*)$ app.php [QSA,L]
-
-        #RewriteEngine On
-        # Always redirect to WWW
-        #RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-	#RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
-
-	#RewriteCond %{HTTP_HOST} ^www\.golden\-hands\.pl$ [NC]
-        #RewriteRule ^(.*)$ http://golden-hands.pl/$1 [R=301,L]
-
-        #RewriteCond %{HTTP_HOST} ^([^.]+)\.xn--zote\-rce-seb81b\.com$ [NC] 
-        #RewriteRule ^(.*)$ http://xn--zote-rce-seb81b.pl/$1 [R=301,L] 
-
-        # Symfony stuff
-        #RewriteCond %{REQUEST_FILENAME} !-f
-        #RewriteRule ^(.*)$ app.php [QSA,L]
     </Directory>
 
 </VirtualHost>
